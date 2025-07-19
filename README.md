@@ -11,16 +11,15 @@ For more docs, see: [Terraspace Docker Docs](https://terraspace.cloud/docs/insta
 ## Compilation
 
 ```
-docker buildx build --network=host -t ghcr.io/boltops-tools .
-docker tag terraspace docker.io/atefhaloui/terraspace:0.1.0
-docker tag terraspace docker.io/atefhaloui/terraspace:latest
-docker push docker.io/atefhaloui/terraspace:0.1.0
-docker push docker.io/atefhaloui/terraspace:latest
+docker buildx build --network=host -t ghcr.io/atefhaloui/terraspace:0.1.0 .
+docker tag ghcr.io/atefhaloui/terraspace:0.1.0 ghcr.io/atefhaloui/terraspace:latest
+docker push ghcr.io/atefhaloui/terraspace:0.1.0
+docker push ghcr.io/atefhaloui/terraspace:latest
 ```
 
 ## Usage
 
 To run the terraspace docker container:
 ```
-docker run --rm -ti terraspace
+docker run --rm -ti ghcr.io/atefhaloui/terraspace terraspace version
 ```
