@@ -21,5 +21,5 @@ docker push ghcr.io/atefhaloui/terraspace:latest
 
 To run the terraspace docker container:
 ```
-docker run --rm -ti ghcr.io/atefhaloui/terraspace terraspace version
+docker run --rm ghcr.io/atefhaloui/terraspace terraspace version
 ```
