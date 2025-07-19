@@ -49,10 +49,6 @@ RUN groupadd -g ${TERRASPACE_GID} ${TERRASPACE_USER} && \
 # Create /build directory and give ownership to terraspace user
 RUN mkdir /build && chown ${TERRASPACE_USER}:${TERRASPACE_USER} /build
 
-# Set ENV so tfenv is in path
-ENV PATH="/home/${TERRASPACE_USER}/.tfenv/bin:$PATH"
-ENV TFENV_TERRAFORM_VERSION="${TERRAFORM_VERSION}"
-
 # Install awscliv2
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
 RUN curl -so "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" && \
