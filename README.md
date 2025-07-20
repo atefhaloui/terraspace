@@ -11,9 +11,9 @@ For more docs, see: [Terraspace Docker Docs](https://terraspace.cloud/docs/insta
 ## Compilation
 
 ```
-docker buildx build --network=host -t ghcr.io/atefhaloui/terraspace:0.1.0 .
-docker tag ghcr.io/atefhaloui/terraspace:0.1.0 ghcr.io/atefhaloui/terraspace:latest
-docker push ghcr.io/atefhaloui/terraspace:0.1.0
+docker buildx build --network=host -t ghcr.io/atefhaloui/terraspace:0.2.0 .
+docker tag ghcr.io/atefhaloui/terraspace:0.2.0 ghcr.io/atefhaloui/terraspace:latest
+docker push ghcr.io/atefhaloui/terraspace:0.2.0
 docker push ghcr.io/atefhaloui/terraspace:latest
 ```
 
