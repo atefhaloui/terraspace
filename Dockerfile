@@ -40,8 +40,6 @@ RUN gem install terraspace_plugin_aws \
     terraspace_vcs_gitlab \
     bundler
 
-ENV TS_BUNDLER=0
-
 # Create terraspace user with UID/GID 1000
 RUN groupadd -g ${TERRASPACE_GID} ${TERRASPACE_USER} && \
     useradd -m -u ${TERRASPACE_UID} -g ${TERRASPACE_USER} ${TERRASPACE_USER}
