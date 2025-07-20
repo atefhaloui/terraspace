@@ -46,9 +46,6 @@ ENV TS_BUNDLER=0
 RUN groupadd -g ${TERRASPACE_GID} ${TERRASPACE_USER} && \
     useradd -m -u ${TERRASPACE_UID} -g ${TERRASPACE_USER} ${TERRASPACE_USER}
 
-# Create /build directory and give ownership to terraspace user
-RUN mkdir /build && chown ${TERRASPACE_USER}:${TERRASPACE_USER} /build
-
 # Install awscliv2
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
 RUN curl -so "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" && \
@@ -62,12 +59,6 @@ RUN rm -rf /var/lib/apt/lists/*
 
 # Switch to terraspace user
 USER ${TERRASPACE_USER}
-
-# Set working directory
-WORKDIR /build
-
-# Switch the working directory
-WORKDIR /build
 
 # ERROR: Terraspace requires Terraform between 0.12.x and 1.5.7
 # This is because newer versions of Terraform have a BSL license
