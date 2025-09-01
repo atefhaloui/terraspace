@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
 # Args
-ARG TERRAFORM_VERSION=1.13.1-1
+ARG TERRAFORM_VERSION=1.13.1
 ARG TERRASPACE_VERSION=2.2.18 # https://github.com/boltops-tools/terraspace/blob/master/CHANGELOG.md
 ARG TERRASPACE_USER=terraspace
 ARG TERRASPACE_UID=1000
@@ -26,7 +26,8 @@ RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | \
     tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list && \
     apt-get update && \
-    apt-get -y install terraform=${TERRAFORM_VERSION}
+    TF_DEB_VERSION=$(apt-cache madison terraform | awk -v ver="$TERRAFORM_VERSION" -F'|' '$2 ~ ver {gsub(/ /,"",$2); print $2; exit}') && \
+    apt-get -y install terraform=${TF_DEB_VERSION}
 
 # Set environment for bundler
 ENV BUNDLE_PATH=/opt/terraspace/vendor/bundle
