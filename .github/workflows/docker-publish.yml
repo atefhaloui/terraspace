@@ -8,18 +8,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      TERRASPACE_VERSION:
-        description: 'Terraspace version'
-        required: true
-        default: '2.2.18'
-      TERRAFORM_VERSION:
-        description: 'Terraform version'
-        required: true
-        default: '1.13.1'
 
 env:
   IMAGE_NAME: terraspace
+  TERRASPACE_VERSION: '2.2.18'
+  TERRAFORM_VERSION: '1.13.1'
 
 jobs:
   build-and-push:
