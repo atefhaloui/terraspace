@@ -1,13 +1,13 @@
 FROM debian:bookworm-slim
 
 # Args
-ARG TERRAFORM_VERSION=1.12.2-1
-ARG TERRASPACE_VERSION=2.2.17
+ARG TERRAFORM_VERSION=1.13.1-1
+ARG TERRASPACE_VERSION=2.2.18 # https://github.com/boltops-tools/terraspace/blob/master/CHANGELOG.md
 ARG TERRASPACE_USER=terraspace
 ARG TERRASPACE_UID=1000
 ARG TERRASPACE_GID=1000
 
-# Install dependencies 
+# Install dependencies
 RUN apt-get update && apt-get install -y \
   curl \
   wget \
@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
   gnupg \
   git \
   file \
+  jq \
   ca-certificates \
   ruby-full \
   build-essential \
@@ -52,6 +53,9 @@ RUN curl -so "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_6
     rm -rf awscliv2.zip aws && \
     aws --version
 
+# Add AWS SDK in order to add more Ruby based scripts that can be used with the external terraform provider
+RUN gem install aws-sdk
+
 # Cleanup
 RUN rm -rf /var/lib/apt/lists/*
 
@@ -61,9 +65,9 @@ USER ${TERRASPACE_USER}
 # ERROR: Terraspace requires Terraform between 0.12.x and 1.5.7
 # This is because newer versions of Terraform have a BSL license
 # If your usage is allowed by the license, you can bypass this check with:
-# 
+#
 #     export TS_VERSION_CHECK=0
-# 
+#
 # Note: If you're using Terraspace Cloud, you won't be able to bypass this check.
 # See: https://terraspace.cloud/docs/terraform/license/
 ENV TS_VERSION_CHECK=0
