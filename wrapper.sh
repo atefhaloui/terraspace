@@ -3,12 +3,9 @@
 set -eu
 
 DIR="$(dirname "$(realpath "$0")")"
+DOCKER_IMAGE="ghcr.io/atefhaloui/terraspace:latest"
 
-# https://github.com/orgs/boltops-tools/packages/container/package/terraspace
-DOCKER_IMAGE="ghcr.io/atefhaloui/terraspace:0.1.0"
-
-# Checking the presence of terraspace image
-# I'm assuming you have the right to pull image
+# Pull if missing
 if [ -z "$$(docker images -q ${DOCKER_IMAGE})" ]; then \
   echo "Image '${DOCKER_IMAGE}' not found. Pulling..."
   docker pull ${DOCKER_IMAGE}

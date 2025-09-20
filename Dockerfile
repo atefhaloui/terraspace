@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
 # Args
-ARG TERRAFORM_VERSION=1.13.1
+ARG TERRAFORM_VERSION=1.13.3
 ARG TERRASPACE_VERSION=2.2.18 # https://github.com/boltops-tools/terraspace/blob/master/CHANGELOG.md
 ARG TERRASPACE_USER=terraspace
 ARG TERRASPACE_UID=1000
@@ -19,7 +19,9 @@ RUN apt-get update && apt-get install -y \
   ca-certificates \
   ruby-full \
   build-essential \
-  software-properties-common
+  software-properties-common \
+  python3 \
+  python3-pip
 
 # Install terraform
 RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | \
@@ -57,8 +59,28 @@ RUN curl -so "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_6
 # Add AWS SDK in order to add more Ruby based scripts that can be used with the external terraform provider
 RUN gem install aws-sdk
 
+# Install Checkov (via pip)
+# TODO: pin a version for reproducibility, e.g. 'pip3 install --no-cache-dir checkov==3.2.348'
+RUN pip3 install --no-cache-dir --upgrade pip && \
+  pip3 install --no-cache-dir checkov && \
+  checkov --version
+
+# Install TFLint (download binary from GitHub)
+RUN set -euo pipefail; \
+  ARCH="$(dpkg --print-architecture)"; \
+  case "$ARCH" in \
+    amd64) TFLINT_ARCH="amd64" ;; \
+    arm64) TFLINT_ARCH="arm64" ;; \
+    *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
+  esac; \
+  curl -fsSL -o /tmp/tflint.zip "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_${TFLINT_ARCH}.zip" && \
+  unzip -q /tmp/tflint.zip -d /usr/local/bin && \
+  chmod +x /usr/local/bin/tflint && \
+  rm -f /tmp/tflint.zip && \
+  tflint --version
+
 # Cleanup
-RUN rm -rf /var/lib/apt/lists/*
+RUN rm -rf /var/lib/apt/lists/* /root/.cache/pip
 
 # Switch to terraspace user
 USER ${TERRASPACE_USER}
