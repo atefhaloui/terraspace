@@ -3,6 +3,8 @@ FROM debian:bookworm-slim
 # Args
 ARG TERRAFORM_VERSION=1.13.3
 ARG TERRASPACE_VERSION=2.2.18 # https://github.com/boltops-tools/terraspace/blob/master/CHANGELOG.md
+ARG CHECKOV_VERSION=3.2.471
+ARG TFLINT_VERSION=0.59.1
 ARG TERRASPACE_USER=terraspace
 ARG TERRASPACE_UID=1000
 ARG TERRASPACE_GID=1000
@@ -21,7 +23,8 @@ RUN apt-get update && apt-get install -y \
   build-essential \
   software-properties-common \
   python3 \
-  python3-pip
+  python3-pip \
+  python3-venv
 
 # Install terraform
 RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | \
@@ -60,14 +63,14 @@ RUN curl -so "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_6
 RUN gem install aws-sdk
 
 # Install Checkov (via pip)
-# TODO: pin a version for reproducibility, e.g. 'pip3 install --no-cache-dir checkov==3.2.348'
-RUN pip3 install --no-cache-dir --upgrade pip && \
-  pip3 install --no-cache-dir checkov && \
-  checkov --version
+RUN python3 -m venv /opt/checkov && \
+    /opt/checkov/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/checkov/bin/pip install --no-cache-dir "checkov==${CHECKOV_VERSION}" && \
+    ln -sf /opt/checkov/bin/checkov /usr/local/bin/checkov && \
+    checkov --version
 
 # Install TFLint (download binary from GitHub)
-RUN set -euo pipefail; \
-  ARCH="$(dpkg --print-architecture)"; \
+RUN ARCH="$(dpkg --print-architecture)"; \
   case "$ARCH" in \
     amd64) TFLINT_ARCH="amd64" ;; \
     arm64) TFLINT_ARCH="arm64" ;; \
