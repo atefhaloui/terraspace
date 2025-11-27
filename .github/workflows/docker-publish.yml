@@ -37,7 +37,7 @@ jobs:
         run: |
           # Use workflow_dispatch inputs if present, else fallback to Dockerfile parsing or defaults
           TERRASPACE_VERSION="${{ github.event.inputs.TERRASPACE_VERSION || '2.2.18' }}"
-          TERRAFORM_VERSION="${{ github.event.inputs.TERRAFORM_VERSION || '1.13.1' }}"
+          TERRAFORM_VERSION="${{ github.event.inputs.TERRAFORM_VERSION || '1.13.3' }}"
           echo "TERRASPACE_VERSION=$TERRASPACE_VERSION" >> $GITHUB_ENV
           echo "TERRAFORM_VERSION=$TERRAFORM_VERSION" >> $GITHUB_ENV
           echo "TAG=${TERRASPACE_VERSION}-bookworm-${TERRAFORM_VERSION}" >> $GITHUB_ENV
